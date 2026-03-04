@@ -1,224 +1,109 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VORTEX ADMIN</title>
-
-<link rel="stylesheet" href="style.css">
+<title>Admin Panel</title>
 
 <style>
-
-/* ===== BODY ===== */
 body{
-    margin:0;
-    background:#05060c;
-    font-family:'Segoe UI',sans-serif;
-    color:white;
+  margin:0;
+  background:#06080f;
+  font-family:Arial;
+  color:white;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
 }
 
-/* ===== LOGIN SCREEN ===== */
-#loginScreen{
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
+.box{
+  background:#0c111c;
+  padding:40px;
+  border-radius:12px;
+  text-align:center;
+  box-shadow:0 0 25px rgba(0,234,255,.4);
 }
 
-.login-box{
-    background:rgba(255,255,255,0.05);
-    padding:40px;
-    border-radius:15px;
-    text-align:center;
-    backdrop-filter:blur(15px);
-    box-shadow:0 0 25px rgba(0,234,255,.3);
-}
-
-.login-box h2{
-    color:#00eaff;
-    text-shadow:0 0 12px #00eaff;
-}
-
-input{
-    width:100%;
-    padding:12px;
-    margin-top:15px;
-    border-radius:8px;
-    border:1px solid #00eaff55;
-    background:#0b0f18;
-    color:white;
-    outline:none;
+input,button{
+  padding:12px;
+  margin-top:15px;
+  width:100%;
+  border:none;
+  border-radius:8px;
 }
 
 button{
-    margin-top:15px;
-    width:100%;
-    padding:12px;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
-    font-weight:bold;
-    background:linear-gradient(45deg,#00eaff,#ff2fd1);
-    color:white;
-    transition:.3s;
-}
-
-button:hover{
-    transform:scale(1.05);
-    box-shadow:0 0 20px #00eaff;
+  background:linear-gradient(45deg,#00eaff,#ff2fd1);
+  color:white;
+  cursor:pointer;
 }
 
 #error{
-    margin-top:10px;
-    color:#ff004c;
-    font-weight:bold;
+  color:red;
+  margin-top:10px;
 }
-
-/* ===== ADMIN PANEL ===== */
-
-#adminPanel{
-    display:none;
-    padding:40px;
-}
-
-.admin-header{
-    text-align:center;
-    margin-bottom:30px;
-}
-
-.admin-header h1{
-    color:#00eaff;
-    text-shadow:0 0 15px #00eaff;
-}
-
-.dashboard{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-    gap:25px;
-}
-
-.card{
-    background:rgba(255,255,255,0.04);
-    padding:25px;
-    border-radius:15px;
-    border:1px solid rgba(0,234,255,0.2);
-    backdrop-filter:blur(12px);
-    transition:.4s;
-}
-
-.card:hover{
-    transform:translateY(-6px);
-    box-shadow:0 0 30px rgba(0,234,255,.4);
-}
-
-.card h2{
-    color:#ff2fd1; /* NO GREEN */
-}
-
-.stat{
-    font-size:26px;
-    text-align:center;
-    margin-top:10px;
-    color:#00eaff;
-}
-
-/* file input style */
-input[type="file"]{
-    border:none;
-    background:none;
-}
-
-.logout{
-    margin-top:30px;
-    background:#ff004c;
-}
-
 </style>
 </head>
 
 <body>
 
-<!-- ================= LOGIN ================= -->
-<div id="loginScreen">
-    <div class="login-box">
-        <h2>ADMIN ACCESS</h2>
-        <input type="password" id="password" placeholder="Enter Password">
-        <button onclick="checkPassword()">ENTER</button>
-        <div id="error"></div>
-    </div>
+<div class="box" id="loginBox">
+<h2>ADMIN ACCESS</h2>
+
+<input type="password" id="password" placeholder="Password">
+<button onclick="checkPassword()">ENTER</button>
+
+<div id="error"></div>
 </div>
 
-<!-- ================= ADMIN PANEL ================= -->
-<div id="adminPanel">
 
-    <div class="admin-header">
-        <h1>⚡ VORTEX ADMIN DASHBOARD ⚡</h1>
-    </div>
+<div class="box" id="adminPanel" style="display:none;">
+<h2>Upload Promotion</h2>
 
-    <div class="dashboard">
-
-        <!-- Upload Promotion -->
-        <div class="card">
-            <h2>Upload Promotion Image</h2>
-
-            <input type="file" id="imageUpload" accept="image/*">
-
-            <button onclick="uploadImage()">Upload</button>
-        </div>
-
-        <!-- Website Stats -->
-        <div class="card">
-            <h2>Website Stats</h2>
-
-            <div class="stat">👁 12,450 Views</div>
-            <div class="stat">🔥 320 Users</div>
-        </div>
-
-        <!-- Settings -->
-        <div class="card">
-            <h2>System Settings</h2>
-
-            <input type="text" placeholder="Change Site Title">
-            <button>Save</button>
-        </div>
-
-    </div>
-
-    <button class="logout" onclick="logout()">Logout</button>
+<input type="file" id="imageUpload" accept="image/*">
+<button onclick="uploadImage()">UPLOAD</button>
 
 </div>
 
-<!-- ================= SCRIPT ================= -->
 <script>
 
-const ADMIN_PASS = "STUDYOCEAN";
+const ADMIN_PASS="STUDYOCEAN";
 
 function checkPassword(){
-    let pass = document.getElementById("password").value;
+  const pass=document.getElementById("password").value;
 
-    if(pass === ADMIN_PASS){
-        document.getElementById("loginScreen").style.display="none";
-        document.getElementById("adminPanel").style.display="block";
-        alert("ACCESS GRANTED ⚡");
-    }else{
-        document.getElementById("error").innerText="FUCK OFF";
-    }
+  if(pass===ADMIN_PASS){
+    alert("ACCESS GRANTED ⚡");
+    document.getElementById("loginBox").style.display="none";
+    document.getElementById("adminPanel").style.display="block";
+  }else{
+    document.getElementById("error").innerText="FUCK OFF";
+  }
 }
 
-function logout(){
-    location.reload();
-}
+/* ===== REAL IMAGE UPLOAD ===== */
+async function uploadImage(){
 
-function uploadImage(){
-    let file = document.getElementById("imageUpload").files[0];
+  const file=document.getElementById("imageUpload").files[0];
 
-    if(!file){
-        alert("Select image first!");
-        return;
-    }
+  if(!file){
+    alert("Select image first!");
+    return;
+  }
 
-    alert("Image Selected: " + file.name);
-    // future backend upload yaha connect hoga
+  const formData=new FormData();
+  formData.append("image",file);
+
+  const res=await fetch("/upload",{
+    method:"POST",
+    body:formData
+  });
+
+  const data=await res.json();
+
+  if(data.success){
+    alert("UPLOAD SUCCESS 🚀");
+  }
 }
 
 </script>

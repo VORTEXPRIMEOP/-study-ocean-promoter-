@@ -1,40 +1,45 @@
-const express = require('express');
-const multer = require('multer');
-const fs = require('fs');
-const path = require('path');
+const express = require("express");
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
-// Storage config
+/* ===== STATIC FILES ===== */
+app.use(express.static(__dirname));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+/* ===== CREATE UPLOAD FOLDER IF NOT EXISTS ===== */
+if (!fs.existsSync("uploads")) {
+  fs.mkdirSync("uploads");
+}
+
+/* ===== MULTER STORAGE ===== */
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/');
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname));
-    }
+  destination: function (req, file, cb) {
+    cb(null, "uploads/");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
 });
 
 const upload = multer({ storage });
 
-// Ensure uploads folder exists
-if (!fs.existsSync('uploads')) fs.mkdirSync('uploads');
-
-// Serve static files
-app.use(express.static(__dirname));
-
-// Get all photos
-app.get('/photos', (req, res) => {
-    fs.readdir('uploads', (err, files) => {
-        if(err) return res.json([]);
-        res.json(files);
-    });
+/* ===== IMAGE UPLOAD API ===== */
+app.post("/upload", upload.single("image"), (req, res) => {
+  res.json({ success: true });
 });
 
-// Upload photo
-app.post('/upload', upload.single('photo'), (req, res) => {
-    res.json({ message: 'Photo uploaded successfully! &#128077;' });
+/* ===== GET ALL IMAGES ===== */
+app.get("/images", (req, res) => {
+  fs.readdir("uploads", (err, files) => {
+    if (err) return res.json([]);
+    res.json(files);
+  });
 });
 
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+app.listen(PORT, () => {
+  console.log("Server running on port " + PORT);
+});
