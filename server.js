@@ -1,67 +1,46 @@
 const express = require("express");
 const multer = require("multer");
-const path = require("path");
 const fs = require("fs");
+const path = require("path");
 
 const app = express();
 
-const PORT = process.env.PORT || 10000;
-
-// folders
 app.use(express.static("public"));
-app.use("/uploads", express.static("uploads"));
 app.use(express.json());
 
-// ===== STORAGE =====
+const PORT = process.env.PORT || 3000;
+
+/* uploads folder */
+const uploadDir = path.join(__dirname, "public/uploads");
+
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+/* multer */
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/");
-  },
+  destination: uploadDir,
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
+    cb(null, Date.now() + "-" + file.originalname);
   }
 });
 
 const upload = multer({ storage });
 
-// ===== IMAGE UPLOAD =====
+/* upload api */
 app.post("/upload", upload.single("image"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).send("No file uploaded");
-  }
-
-  const imagePath = "/uploads/" + req.file.filename;
-
-  fs.writeFileSync("data.json", JSON.stringify({ image: imagePath }));
-
-  res.json({ success: true, image: imagePath });
+  res.send("Uploaded");
 });
 
-// ===== GET IMAGE =====
-app.get("/image", (req, res) => {
-  if (!fs.existsSync("data.json"))
-    return res.json({ image: "" });
-
-  const data = JSON.parse(fs.readFileSync("data.json"));
-  res.json(data);
+/* gallery api */
+app.get("/images", (req, res) => {
+  fs.readdir(uploadDir, (err, files) => {
+    if (err) return res.json([]);
+    res.json(files);
+  });
 });
 
-// ===== ANNOUNCEMENT =====
-app.post("/announcement", (req, res) => {
-  fs.writeFileSync(
-    "announcement.json",
-    JSON.stringify({ text: req.body.text })
-  );
-  res.json({ success: true });
+/* start server */
+app.listen(PORT, () => {
+  console.log("Running on port " + PORT);
 });
-
-app.get("/announcement", (req, res) => {
-  if (!fs.existsSync("announcement.json"))
-    return res.json({ text: "" });
-
-  res.json(JSON.parse(fs.readFileSync("announcement.json")));
-});
-
-app.listen(PORT, () =>
-  console.log("Server running on port " + PORT)
-);
