@@ -1,34 +1,25 @@
-const intro = document.getElementById("intro");
+// intro animation
+setTimeout(()=>{
+  document.getElementById("intro").style.display="none";
+  document.getElementById("main").style.display="block";
+},3000);
 
-const text = "ACCESSING STUDYOCEAN...";
-let i = 0;
+// load posts
+async function loadPosts(){
+  const res = await fetch("data.json");
+  const posts = await res.json();
 
-function typeEffect(){
-  if(i < text.length){
-    intro.innerHTML += text.charAt(i);
-    i++;
-    setTimeout(typeEffect,50);
-  }else{
-    setTimeout(()=>{
-      intro.style.display="none";
-    },1000);
-  }
+  const container=document.getElementById("posts");
+  container.innerHTML="";
+
+  posts.reverse().forEach(p=>{
+    container.innerHTML+=`
+      <div class="card">
+        <h3>${p.title}</h3>
+        <img src="${p.image}">
+      </div>
+    `;
+  });
 }
 
-typeEffect();
-
-// LOAD IMAGE
-fetch("/image")
-.then(res=>res.json())
-.then(data=>{
-  if(data.image){
-    document.getElementById("mainImage").src = data.image;
-  }
-});
-
-// LOAD ANNOUNCEMENT
-fetch("/announcement")
-.then(res=>res.json())
-.then(data=>{
-  document.getElementById("announcementBox").innerText = data.text;
-});
+loadPosts();

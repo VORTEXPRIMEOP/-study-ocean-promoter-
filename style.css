@@ -1,110 +1,44 @@
-/* ===== GLOBAL ===== */
-
 body{
   margin:0;
-  padding:0;
   background:black;
   color:#00ff00;
-  font-family:Consolas, monospace;
-  text-align:center;
-  overflow-x:hidden;
+  font-family:monospace;
 }
 
-/* ===== INTRO TEXT ===== */
-
+/* INTRO */
 #intro{
   position:fixed;
-  top:40%;
   width:100%;
-  font-size:28px;
-  color:#00ff00;
-  text-shadow:0 0 10px #00ff00;
-  letter-spacing:3px;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:black;
 }
 
-/* ===== TITLE ===== */
-
-.title{
-  font-size:42px;
-  margin-top:30px;
-  text-shadow:
-    0 0 10px #00ff00,
-    0 0 20px #00ff00,
-    0 0 40px #00ff00;
+.glitch{
+  font-size:50px;
+  animation:flicker 1s infinite;
 }
 
-/* ===== IMAGE ===== */
-
-#mainImage{
-  max-width:90%;
-  margin-top:25px;
-  border:2px solid #00ff00;
-  box-shadow:0 0 20px #00ff00;
-  border-radius:10px;
+@keyframes flicker{
+  0%{opacity:1}
+  50%{opacity:.4}
+  100%{opacity:1}
 }
 
-/* ===== ANNOUNCEMENT BOX ===== */
+/* POSTS */
+#main{
+  padding:20px;
+}
 
-#announcementBox{
-  margin:30px auto;
+.card{
+  border:1px solid #00ff00;
   padding:15px;
-  width:70%;
-  border:1px solid #00ff00;
-  box-shadow:0 0 15px #00ff00;
-  font-size:20px;
+  margin:15px 0;
 }
 
-/* ===== ADMIN LOGIN BOX ===== */
-
-#loginBox{
-  margin-top:120px;
-}
-
-/* ===== INPUTS ===== */
-
-input{
-  padding:12px;
-  width:250px;
-  background:black;
-  color:#00ff00;
-  border:1px solid #00ff00;
-  outline:none;
-  font-size:16px;
-  box-shadow:0 0 10px #00ff00 inset;
-}
-
-/* ===== BUTTONS ===== */
-
-button{
-  padding:12px 20px;
-  margin:10px;
-  background:black;
-  color:#00ff00;
-  border:1px solid #00ff00;
-  cursor:pointer;
-  font-size:16px;
-  transition:0.3s;
-}
-
-button:hover{
-  background:#00ff00;
-  color:black;
-  box-shadow:0 0 20px #00ff00;
-}
-
-/* ===== PANEL ===== */
-
-#panel{
-  margin-top:40px;
-}
-
-/* ===== SCROLLBAR ===== */
-
-::-webkit-scrollbar{
-  width:8px;
-}
-
-::-webkit-scrollbar-thumb{
-  background:#00ff00;
-  box-shadow:0 0 10px #00ff00;
+.card img{
+  width:100%;
+  max-width:300px;
 }

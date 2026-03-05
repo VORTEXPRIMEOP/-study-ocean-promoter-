@@ -8,63 +8,63 @@
 
 <body>
 
-<div id="loginBox">
-<h2>Admin Access</h2>
-<input type="password" id="pass" placeholder="Enter Password">
-<button onclick="checkPass()">Login</button>
-</div>
+<h2>ADMIN PANEL ⚡</h2>
 
-<div id="panel" style="display:none;">
+<input type="text" id="title" placeholder="Post Title"><br><br>
 
-<h2>Upload Image</h2>
-<input type="file" id="imageFile">
-<button onclick="uploadImage()">Upload</button>
+<input type="file" id="imageUpload"><br><br>
 
-<h2>Announcement</h2>
-<input id="announceText" placeholder="Enter announcement">
-<button onclick="sendAnnouncement()">Send</button>
+<button onclick="uploadPost()">UPLOAD POST</button>
 
-</div>
+<br><br>
+<img id="preview" width="200">
 
 <script>
-function checkPass(){
-  const p = document.getElementById("pass").value;
 
-  if(p === "STUDYOCEAN"){
-    alert("Access Granted ✅");
-    document.getElementById("loginBox").style.display="none";
-    document.getElementById("panel").style.display="block";
-  }else{
-    alert("Fuck Off ❌");
+async function uploadPost(){
+
+  const file=document.getElementById("imageUpload").files[0];
+  const title=document.getElementById("title").value;
+
+  if(!file || !title){
+    alert("Fill all fields");
+    return;
   }
-}
 
-async function uploadImage(){
-  const file = document.getElementById("imageFile").files[0];
-  if(!file) return alert("Select image");
+  const formData=new FormData();
+  formData.append("file",file);
+  formData.append("upload_preset","vortex_upload");
 
-  const formData = new FormData();
-  formData.append("image", file);
+  // Cloudinary Upload
+  const res=await fetch(
+    "https://api.cloudinary.com/v1_1/dzlu3k6f9/image/upload",
+    {
+      method:"POST",
+      body:formData
+    }
+  );
 
-  await fetch("/upload",{
-    method:"POST",
-    body:formData
+  const data=await res.json();
+
+  document.getElementById("preview").src=data.secure_url;
+
+  // Save locally
+  let posts=[];
+
+  try{
+    posts=JSON.parse(localStorage.getItem("posts"))||[];
+  }catch{}
+
+  posts.push({
+    title:title,
+    image:data.secure_url
   });
 
-  alert("Uploaded ✅");
+  localStorage.setItem("posts",JSON.stringify(posts));
+
+  alert("Post Uploaded ✅");
 }
 
-async function sendAnnouncement(){
-  const text = document.getElementById("announceText").value;
-
-  await fetch("/announcement",{
-    method:"POST",
-    headers:{ "Content-Type":"application/json"},
-    body:JSON.stringify({text})
-  });
-
-  alert("Announcement Sent ✅");
-}
 </script>
 
 </body>
