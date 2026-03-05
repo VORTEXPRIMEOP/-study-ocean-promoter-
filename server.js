@@ -4,45 +4,64 @@ const path = require("path");
 const fs = require("fs");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-/* ===== STATIC FILES ===== */
-app.use(express.static(__dirname));
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+const PORT = process.env.PORT || 10000;
 
-/* ===== ENSURE UPLOAD FOLDER EXISTS ===== */
-const uploadPath = path.join(__dirname, "uploads");
-if (!fs.existsSync(uploadPath)) {
-  fs.mkdirSync(uploadPath);
-}
+// folders
+app.use(express.static("public"));
+app.use("/uploads", express.static("uploads"));
+app.use(express.json());
 
-/* ===== HOMEPAGE FIX (IMPORTANT) ===== */
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "index.html"));
-});
-
-/* ===== MULTER STORAGE ===== */
+// ===== STORAGE =====
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, "uploads/"),
-  filename: (req, file, cb) =>
-    cb(null, Date.now() + path.extname(file.originalname)),
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  }
 });
 
 const upload = multer({ storage });
 
-/* ===== UPLOAD ROUTE ===== */
+// ===== IMAGE UPLOAD =====
 app.post("/upload", upload.single("image"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).send("No file uploaded");
+  }
+
+  const imagePath = "/uploads/" + req.file.filename;
+
+  fs.writeFileSync("data.json", JSON.stringify({ image: imagePath }));
+
+  res.json({ success: true, image: imagePath });
+});
+
+// ===== GET IMAGE =====
+app.get("/image", (req, res) => {
+  if (!fs.existsSync("data.json"))
+    return res.json({ image: "" });
+
+  const data = JSON.parse(fs.readFileSync("data.json"));
+  res.json(data);
+});
+
+// ===== ANNOUNCEMENT =====
+app.post("/announcement", (req, res) => {
+  fs.writeFileSync(
+    "announcement.json",
+    JSON.stringify({ text: req.body.text })
+  );
   res.json({ success: true });
 });
 
-/* ===== GET IMAGES ===== */
-app.get("/images", (req, res) => {
-  fs.readdir(uploadPath, (err, files) => {
-    if (err) return res.json([]);
-    res.json(files);
-  });
+app.get("/announcement", (req, res) => {
+  if (!fs.existsSync("announcement.json"))
+    return res.json({ text: "" });
+
+  res.json(JSON.parse(fs.readFileSync("announcement.json")));
 });
 
-app.listen(PORT, () => {
-  console.log("Server running on port " + PORT);
-});
+app.listen(PORT, () =>
+  console.log("Server running on port " + PORT)
+);

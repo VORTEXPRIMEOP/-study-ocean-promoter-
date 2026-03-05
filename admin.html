@@ -3,109 +3,68 @@
 <head>
 <meta charset="UTF-8">
 <title>Admin Panel</title>
-
-<style>
-body{
-  margin:0;
-  background:#06080f;
-  font-family:Arial;
-  color:white;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-}
-
-.box{
-  background:#0c111c;
-  padding:40px;
-  border-radius:12px;
-  text-align:center;
-  box-shadow:0 0 25px rgba(0,234,255,.4);
-}
-
-input,button{
-  padding:12px;
-  margin-top:15px;
-  width:100%;
-  border:none;
-  border-radius:8px;
-}
-
-button{
-  background:linear-gradient(45deg,#00eaff,#ff2fd1);
-  color:white;
-  cursor:pointer;
-}
-
-#error{
-  color:red;
-  margin-top:10px;
-}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div class="box" id="loginBox">
-<h2>ADMIN ACCESS</h2>
-
-<input type="password" id="password" placeholder="Password">
-<button onclick="checkPassword()">ENTER</button>
-
-<div id="error"></div>
+<div id="loginBox">
+<h2>Admin Access</h2>
+<input type="password" id="pass" placeholder="Enter Password">
+<button onclick="checkPass()">Login</button>
 </div>
 
+<div id="panel" style="display:none;">
 
-<div class="box" id="adminPanel" style="display:none;">
-<h2>Upload Promotion</h2>
+<h2>Upload Image</h2>
+<input type="file" id="imageFile">
+<button onclick="uploadImage()">Upload</button>
 
-<input type="file" id="imageUpload" accept="image/*">
-<button onclick="uploadImage()">UPLOAD</button>
+<h2>Announcement</h2>
+<input id="announceText" placeholder="Enter announcement">
+<button onclick="sendAnnouncement()">Send</button>
 
 </div>
 
 <script>
+function checkPass(){
+  const p = document.getElementById("pass").value;
 
-const ADMIN_PASS="STUDYOCEAN";
-
-function checkPassword(){
-  const pass=document.getElementById("password").value;
-
-  if(pass===ADMIN_PASS){
-    alert("ACCESS GRANTED ⚡");
+  if(p === "STUDYOCEAN"){
+    alert("Access Granted ✅");
     document.getElementById("loginBox").style.display="none";
-    document.getElementById("adminPanel").style.display="block";
+    document.getElementById("panel").style.display="block";
   }else{
-    document.getElementById("error").innerText="FUCK OFF";
+    alert("Fuck Off ❌");
   }
 }
 
-/* ===== REAL IMAGE UPLOAD ===== */
 async function uploadImage(){
+  const file = document.getElementById("imageFile").files[0];
+  if(!file) return alert("Select image");
 
-  const file=document.getElementById("imageUpload").files[0];
+  const formData = new FormData();
+  formData.append("image", file);
 
-  if(!file){
-    alert("Select image first!");
-    return;
-  }
-
-  const formData=new FormData();
-  formData.append("image",file);
-
-  const res=await fetch("/upload",{
+  await fetch("/upload",{
     method:"POST",
     body:formData
   });
 
-  const data=await res.json();
-
-  if(data.success){
-    alert("UPLOAD SUCCESS 🚀");
-  }
+  alert("Uploaded ✅");
 }
 
+async function sendAnnouncement(){
+  const text = document.getElementById("announceText").value;
+
+  await fetch("/announcement",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json"},
+    body:JSON.stringify({text})
+  });
+
+  alert("Announcement Sent ✅");
+}
 </script>
 
 </body>

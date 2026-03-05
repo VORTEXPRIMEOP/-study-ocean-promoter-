@@ -1,260 +1,110 @@
-/* ================= RESET ================= */
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:"Courier New", monospace;
-}
+/* ===== GLOBAL ===== */
 
 body{
-background:radial-gradient(circle at top,#0b0b18,#040409 70%);
-color:#ffffff;
-overflow-x:hidden;
-min-height:100vh;
+  margin:0;
+  padding:0;
+  background:black;
+  color:#00ff00;
+  font-family:Consolas, monospace;
+  text-align:center;
+  overflow-x:hidden;
 }
 
-/* ================= INTRO (UNCHANGED LOOK) ================= */
+/* ===== INTRO TEXT ===== */
 
 #intro{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:#000;
-display:flex;
-justify-content:center;
-align-items:center;
-z-index:9999;
+  position:fixed;
+  top:40%;
+  width:100%;
+  font-size:28px;
+  color:#00ff00;
+  text-shadow:0 0 10px #00ff00;
+  letter-spacing:3px;
 }
 
-#matrix{
-position:absolute;
-width:100%;
-height:100%;
+/* ===== TITLE ===== */
+
+.title{
+  font-size:42px;
+  margin-top:30px;
+  text-shadow:
+    0 0 10px #00ff00,
+    0 0 20px #00ff00,
+    0 0 40px #00ff00;
 }
 
-.intro-text{
-position:relative;
-font-size:2rem;
-color:#00ff00;
-text-align:center;
-text-shadow:0 0 20px #00ff00;
-z-index:2;
+/* ===== IMAGE ===== */
+
+#mainImage{
+  max-width:90%;
+  margin-top:25px;
+  border:2px solid #00ff00;
+  box-shadow:0 0 20px #00ff00;
+  border-radius:10px;
 }
 
-/* ================= PARTICLES ================= */
+/* ===== ANNOUNCEMENT BOX ===== */
 
-#particles{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-z-index:-1;
-pointer-events:none;
+#announcementBox{
+  margin:30px auto;
+  padding:15px;
+  width:70%;
+  border:1px solid #00ff00;
+  box-shadow:0 0 15px #00ff00;
+  font-size:20px;
 }
 
-/* ================= HEADER ================= */
+/* ===== ADMIN LOGIN BOX ===== */
 
-header{
-text-align:center;
-padding:30px 15px;
-backdrop-filter:blur(12px);
-background:rgba(255,255,255,0.03);
-border-bottom:1px solid rgba(255,255,255,0.08);
+#loginBox{
+  margin-top:120px;
 }
 
-/* Neon Gradient Heading */
+/* ===== INPUTS ===== */
 
-header h1{
-font-size:2.4rem;
-letter-spacing:2px;
-background:linear-gradient(90deg,#8a7bff,#5be7ff,#c77dff);
--webkit-background-clip:text;
-color:transparent;
-animation:hueRotate 8s linear infinite;
-text-shadow:
-0 0 20px rgba(138,123,255,.6),
-0 0 40px rgba(91,231,255,.4);
+input{
+  padding:12px;
+  width:250px;
+  background:black;
+  color:#00ff00;
+  border:1px solid #00ff00;
+  outline:none;
+  font-size:16px;
+  box-shadow:0 0 10px #00ff00 inset;
 }
 
-@keyframes hueRotate{
-0%{filter:hue-rotate(0deg);}
-100%{filter:hue-rotate(360deg);}
+/* ===== BUTTONS ===== */
+
+button{
+  padding:12px 20px;
+  margin:10px;
+  background:black;
+  color:#00ff00;
+  border:1px solid #00ff00;
+  cursor:pointer;
+  font-size:16px;
+  transition:0.3s;
 }
 
-/* ================= NAVBAR ================= */
-
-nav ul{
-display:flex;
-justify-content:center;
-flex-wrap:wrap;
-gap:25px;
-list-style:none;
-margin-top:18px;
+button:hover{
+  background:#00ff00;
+  color:black;
+  box-shadow:0 0 20px #00ff00;
 }
 
-nav a{
-text-decoration:none;
-color:#ffffff;
-font-weight:bold;
-padding:8px 14px;
-border-radius:8px;
-transition:.3s;
-position:relative;
+/* ===== PANEL ===== */
+
+#panel{
+  margin-top:40px;
 }
 
-nav a::after{
-content:"";
-position:absolute;
-bottom:-4px;
-left:0;
-width:0%;
-height:2px;
-background:#5be7ff;
-transition:.3s;
+/* ===== SCROLLBAR ===== */
+
+::-webkit-scrollbar{
+  width:8px;
 }
 
-nav a:hover::after{
-width:100%;
-}
-
-nav a:hover{
-text-shadow:0 0 12px #5be7ff;
-}
-
-/* ================= CONTROLS ================= */
-
-.controls{
-text-align:center;
-margin:40px 10px;
-}
-
-/* Button */
-
-.controls button{
-padding:14px 26px;
-font-size:1rem;
-border-radius:12px;
-border:2px solid #5be7ff;
-background:rgba(255,255,255,0.02);
-color:#5be7ff;
-cursor:pointer;
-transition:.35s;
-position:relative;
-overflow:hidden;
-}
-
-.controls button:hover{
-transform:translateY(-3px);
-box-shadow:
-0 0 20px #5be7ff,
-0 0 40px rgba(91,231,255,.3);
-background:#5be7ff;
-color:#000;
-}
-
-#total-promotions{
-margin-left:15px;
-font-size:1.1rem;
-color:#bfa6ff;
-}
-
-/* ================= GALLERY ================= */
-
-.hidden{
-display:none;
-}
-
-/* GRID FIX */
-.gallery{
-width:100%;
-max-width:1300px;
-margin:auto;
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-gap:28px;
-padding:25px;
-}
-
-/* IMAGE PERFECT FIT FIX */
-
-.gallery img{
-width:100%;
-height:420px;
-object-fit:contain;     /* MAIN FIX */
-background:#000;
-border-radius:14px;
-border:1px solid rgba(91,231,255,.4);
-padding:8px;
-display:block;
-transition:.35s;
-box-shadow:0 0 18px rgba(91,231,255,.15);
-}
-
-/* Hover */
-
-.gallery img:hover{
-transform:translateY(-6px) scale(1.03);
-box-shadow:
-0 0 30px #5be7ff,
-0 0 60px rgba(168,139,255,.4);
-}
-
-/* ================= SOFT LIGHT EFFECT ================= */
-
-body::before{
-content:"";
-position:fixed;
-top:-200px;
-left:-200px;
-width:600px;
-height:600px;
-background:radial-gradient(circle,#5be7ff22,transparent 70%);
-filter:blur(120px);
-animation:floatLight 12s infinite alternate;
-z-index:-2;
-}
-
-@keyframes floatLight{
-0%{transform:translate(0,0);}
-100%{transform:translate(200px,150px);}
-}
-
-/* ================= SMOOTH ENTRY ================= */
-
-header,
-.controls,
-.gallery{
-animation:fadeUp .7s ease;
-}
-
-@keyframes fadeUp{
-from{
-opacity:0;
-transform:translateY(25px);
-}
-to{
-opacity:1;
-transform:translateY(0);
-}
-}
-
-/* ================= MOBILE FIX ================= */
-
-@media(max-width:600px){
-
-header h1{
-font-size:1.6rem;
-}
-
-.gallery img{
-height:340px;
-}
-
-.controls button{
-padding:12px 20px;
-}
+::-webkit-scrollbar-thumb{
+  background:#00ff00;
+  box-shadow:0 0 10px #00ff00;
 }
