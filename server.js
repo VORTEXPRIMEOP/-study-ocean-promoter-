@@ -10,31 +10,34 @@ const PORT = process.env.PORT || 3000;
 app.use(express.static(__dirname));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-/* ===== CREATE UPLOAD FOLDER IF NOT EXISTS ===== */
-if (!fs.existsSync("uploads")) {
-  fs.mkdirSync("uploads");
+/* ===== ENSURE UPLOAD FOLDER EXISTS ===== */
+const uploadPath = path.join(__dirname, "uploads");
+if (!fs.existsSync(uploadPath)) {
+  fs.mkdirSync(uploadPath);
 }
+
+/* ===== HOMEPAGE FIX (IMPORTANT) ===== */
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
+});
 
 /* ===== MULTER STORAGE ===== */
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/");
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
+  destination: (req, file, cb) => cb(null, "uploads/"),
+  filename: (req, file, cb) =>
+    cb(null, Date.now() + path.extname(file.originalname)),
 });
 
 const upload = multer({ storage });
 
-/* ===== IMAGE UPLOAD API ===== */
+/* ===== UPLOAD ROUTE ===== */
 app.post("/upload", upload.single("image"), (req, res) => {
   res.json({ success: true });
 });
 
-/* ===== GET ALL IMAGES ===== */
+/* ===== GET IMAGES ===== */
 app.get("/images", (req, res) => {
-  fs.readdir("uploads", (err, files) => {
+  fs.readdir(uploadPath, (err, files) => {
     if (err) return res.json([]);
     res.json(files);
   });
