@@ -1,52 +1,51 @@
-const CLOUD_NAME = "your_cloud_name"
-const UPLOAD_PRESET = "website_upload"
+const cloudName = "dzenvybf4";
+const preset = "vortex_upload"; // upload preset name
 
-const gallery = document.getElementById("gallery")
+// Intro 3 sec
+setTimeout(() => {
+  document.getElementById("intro").style.display = "none";
+  document.getElementById("main").style.display = "block";
+}, 3000);
 
+
+// Upload image
 function uploadImage(){
 
-const file = document.getElementById("fileInput").files[0]
+let file = document.getElementById("fileInput").files[0];
 
-const formData = new FormData()
-formData.append("file",file)
-formData.append("upload_preset",UPLOAD_PRESET)
+if(!file){
+alert("Select image first");
+return;
+}
 
-fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,{
+let formData = new FormData();
+formData.append("file", file);
+formData.append("upload_preset", preset);
+
+fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,{
 method:"POST",
 body:formData
 })
-.then(res=>res.json())
-.then(data=>{
-addImage(data.secure_url)
+.then(res => res.json())
+.then(data => {
+
+if(data.secure_url){
+
+let img = document.createElement("img");
+img.src = data.secure_url;
+
+document.getElementById("gallery").prepend(img);
+
+alert("Upload Success");
+
+}else{
+alert("Upload Failed");
+}
+
 })
-}
-
-function addImage(url){
-
-const img=document.createElement("img")
-img.src=url
-gallery.appendChild(img)
-
-saveImage(url)
+.catch(err=>{
+console.log(err);
+alert("Error uploading image");
+});
 
 }
-
-function saveImage(url){
-
-let images=JSON.parse(localStorage.getItem("images")) || []
-images.push(url)
-localStorage.setItem("images",JSON.stringify(images))
-
-}
-
-function loadImages(){
-
-let images=JSON.parse(localStorage.getItem("images")) || []
-
-images.forEach(url=>{
-addImage(url)
-})
-
-}
-
-loadImages()
