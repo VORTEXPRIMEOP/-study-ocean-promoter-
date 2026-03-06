@@ -1,4 +1,4 @@
-/* INTRO TIMER */
+/* INTRO */
 
 setTimeout(()=>{
 
@@ -8,7 +8,7 @@ document.getElementById("intro").style.display="none"
 
 
 
-/* MATRIX EFFECT */
+/* MATRIX */
 
 const canvas=document.getElementById("matrix")
 
@@ -34,9 +34,11 @@ drops[x]=1
 function draw(){
 
 ctx.fillStyle="rgba(0,0,0,0.05)"
+
 ctx.fillRect(0,0,canvas.width,canvas.height)
 
 ctx.fillStyle="#0F0"
+
 ctx.font=fontSize+"px monospace"
 
 for(let i=0;i<drops.length;i++){
@@ -58,8 +60,6 @@ setInterval(draw,33)
 
 
 
-/* NAVIGATION */
-
 function home(){
 
 location.reload()
@@ -79,27 +79,37 @@ window.open("admin.html")
 }
 
 
-/* PROMOTIONS */
 
-let images=[]
+/* CLOUDINARY FETCH */
 
-
-function showPromotions(){
+async function showPromotions(){
 
 const gallery=document.getElementById("gallery")
 
+gallery.innerHTML="Loading..."
+
+let res=await fetch(
+
+"https://res.cloudinary.com/dzlu3k6f9/image/list/promotions.json"
+
+)
+
+let data=await res.json()
+
 gallery.innerHTML=""
 
-images.forEach(img=>{
+data.resources.forEach(img=>{
 
-let i=document.createElement("img")
+let image=document.createElement("img")
 
-i.src=img
+image.src=
 
-gallery.appendChild(i)
+"https://res.cloudinary.com/dzlu3k6f9/image/upload/"+img.public_id+".jpg"
+
+gallery.appendChild(image)
 
 })
 
-document.getElementById("count").innerText=images.length
+document.getElementById("count").innerText=data.resources.length
 
 }
