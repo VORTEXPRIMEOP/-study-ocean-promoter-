@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Study Ocean Promoter</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<!-- INTRO -->
+<div id="intro">
+
+<canvas id="matrix"></canvas>
+
+<div class="introText">
+INITIALIZING VORTEX SYSTEM...
+</div>
+
+</div>
+
+
+<!-- MAIN SITE -->
+
+<div id="mainSite">
+
+<nav>
+
+<h1>&#9889; STUDY OCEAN PROMOTER &#9889;</h1>
+
+<ul>
+
+<li onclick="home()">Home</li>
+
+<li onclick="showPromotions()">Promotions</li>
+
+<li onclick="contact()">Contact</li>
+
+<li onclick="admin()">Admin</li>
+
+</ul>
+
+</nav>
+
+
+<section class="hero">
+
+<button class="viewBtn" onclick="showPromotions()">
+View Promotions &#128248;
+</button>
+
+<div class="counter">
+TOTAL PROMOTIONS &#9760; =
+<span id="count">0</span>
+</div>
+
+</section>
+
+
+<section id="gallery" class="gallery"></section>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
