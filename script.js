@@ -1,51 +1,95 @@
-const cloudName = "dzenvybf4";
-const preset = "vortex_upload"; // upload preset name
+const cloudName="dzenvybf4"
+const preset="vortex_upload"
 
-// Intro 3 sec
-setTimeout(() => {
-  document.getElementById("intro").style.display = "none";
-  document.getElementById("main").style.display = "block";
-}, 3000);
+setTimeout(()=>{
+document.getElementById("intro").style.display="none"
+document.getElementById("main").style.display="block"
+},3000)
 
-
-// Upload image
-function uploadImage(){
-
-let file = document.getElementById("fileInput").files[0];
-
-if(!file){
-alert("Select image first");
-return;
+function showGallery(){
+document.getElementById("gallery").style.display="grid"
 }
 
-let formData = new FormData();
-formData.append("file", file);
-formData.append("upload_preset", preset);
+/* IMAGE UPLOAD */
+
+function uploadImage(){
+
+let file=document.getElementById("fileInput").files[0]
+
+if(!file){
+alert("Select image first")
+return
+}
+
+let formData=new FormData()
+
+formData.append("file",file)
+formData.append("upload_preset",preset)
 
 fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,{
 method:"POST",
 body:formData
 })
-.then(res => res.json())
-.then(data => {
+.then(res=>res.json())
+.then(data=>{
 
 if(data.secure_url){
 
-let img = document.createElement("img");
-img.src = data.secure_url;
+let img=document.createElement("img")
+img.src=data.secure_url
 
-document.getElementById("gallery").prepend(img);
+document.getElementById("gallery").prepend(img)
+document.getElementById("gallery").style.display="grid"
 
-alert("Upload Success");
+alert("Upload Success")
 
 }else{
-alert("Upload Failed");
+alert("Upload failed")
 }
 
 })
-.catch(err=>{
-console.log(err);
-alert("Error uploading image");
-});
 
 }
+
+/* MATRIX INTRO */
+
+const canvas=document.getElementById("matrix")
+const ctx=canvas.getContext("2d")
+
+canvas.height=window.innerHeight
+canvas.width=window.innerWidth
+
+let letters="VORTEXPRIME0123456789"
+letters=letters.split("")
+
+let fontSize=14
+let columns=canvas.width/fontSize
+
+let drops=[]
+for(let x=0;x<columns;x++)
+drops[x]=1
+
+function draw(){
+
+ctx.fillStyle="rgba(0,0,0,0.05)"
+ctx.fillRect(0,0,canvas.width,canvas.height)
+
+ctx.fillStyle="#00ff00"
+ctx.font=fontSize+"px monospace"
+
+for(let i=0;i<drops.length;i++){
+
+let text=letters[Math.floor(Math.random()*letters.length)]
+
+ctx.fillText(text,i*fontSize,drops[i]*fontSize)
+
+if(drops[i]*fontSize>canvas.height && Math.random()>0.975)
+drops[i]=0
+
+drops[i]++
+
+}
+
+}
+
+setInterval(draw,33)

@@ -1,28 +1,46 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>VORTEX PRIME</title>
-<link rel="stylesheet" href="style.css">
-</head>
+const cloudName="dzenvybf4"
+const preset="vortex_upload"
 
-<body>
+setTimeout(()=>{
+document.getElementById("intro").style.display="none"
+document.getElementById("main").style.display="block"
+},3000)
 
-<div id="intro">
-<h1 class="hack">INITIALIZING VORTEX SYSTEM...</h1>
-</div>
+function uploadImage(){
 
-<div id="main">
+let file=document.getElementById("fileInput").files[0]
 
-<h1 class="title">⚡ VORTEX PRIME ⚡</h1>
+if(!file){
+alert("Select image first")
+return
+}
 
-<input type="file" id="fileInput">
-<button onclick="uploadImage()">UPLOAD</button>
+let formData=new FormData()
 
-<div id="gallery"></div>
+formData.append("file",file)
+formData.append("upload_preset",preset)
 
-</div>
+fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,{
+method:"POST",
+body:formData
+})
+.then(res=>res.json())
+.then(data=>{
 
-<script src="script.js"></script>
+if(data.secure_url){
 
-</body>
-</html>
+let img=document.createElement("img")
+img.src=data.secure_url
+
+document.getElementById("gallery").prepend(img)
+
+}else{
+alert("Upload failed")
+}
+
+})
+.catch(()=>{
+alert("Error uploading image")
+})
+
+}
